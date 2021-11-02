@@ -27,11 +27,12 @@ def move_in_cm(tank, distance_cm, choose_program, direction):
     rotationnumber = 0
 
     inital_angle = tank.gyro.angle
+
+    init.debug_print("Init angle: " + str(inital_angle))
            
     #Number of wheel rotations needed to get there
     number_of_wheel_rotations = distance / 25.13
 
-    init.debug_print(number_of_wheel_rotations)
     
     if choose_program == "Line Follower":
         Line_Following(tank, number_of_wheel_rotations, rotationnumber)
@@ -57,23 +58,18 @@ def distance_to_object(tank, number_of_wheel_rotations, direction, rotationnumbe
         #Add rotation number
         rotationnumber += rotation
 
-        degrees_off = inital_angle
-
-        if degrees_off < 0: 
-         tank.turn_right(20, abs(degrees_off))
-        if degrees_off > 0: 
-            tank.turn_left(20, abs(degrees_off))
-
         #Checks if robot has reached destination
         if number_of_wheel_rotations < rotationnumber:
             #Stops the line following program
             distance_not_reached = False
         
-        degrees_off = tank.gyro.angle
 
-        if degrees_off < 0: 
-         tank.turn_right(20, abs(degrees_off))
-        if degrees_off > 0: 
+
+        degrees_off = inital_angle - tank.gyro.angle
+
+        if tank.gyro.angle < inital_angle: 
+            tank.turn_right(20, abs(degrees_off))
+        elif tank.gyro.angle > inital_angle: 
             tank.turn_left(20, abs(degrees_off))
 
 
